@@ -24,7 +24,7 @@ def get_spotify_playlist(url):
                     song_titles.append(title_tag.text.strip())
             else:
                 print("Failed to retrieve the playlist.")
-                return []
+                return {}
 
         songs_dict = {}
 
@@ -42,7 +42,7 @@ def get_spotify_playlist(url):
 
     else:
         print("Failed to retrieve the playlist.")
-        return []
+        return {}
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
