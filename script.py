@@ -1,6 +1,7 @@
 import sys
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 def get_spotify_playlist(url):
     response = requests.get(url)
@@ -38,6 +39,7 @@ def get_spotify_playlist(url):
             artist = artist_info.split(" | Spotify")[0]
 
             songs_dict[artist] = song_name
+
         return(songs_dict)
 
     else:
@@ -51,12 +53,20 @@ if __name__ == "__main__":
 
     url = sys.argv[1]
 
-    playlist = get_spotify_playlist(url)
+    parsed_url = urlparse(url)
+    if all([parsed_url.scheme, parsed_url.netloc]):
+        playlist = get_spotify_playlist(url)
 
-    with open("playlist.txt", "w", encoding="utf-8") as file:
-        for artist, song in playlist.items():
-            file.write(f"{artist} - {song}\n")
-    print("Playlist saved to playlist.txt")
+        if playlist:
+            with open("playlist.txt", "w", encoding="utf-8") as file:
+                for artist, song in playlist.items():
+                    file.write(f"{artist} - {song}\n")
+            print("Playlist saved to playlist.txt")
 
-    for idx, (artist, song) in enumerate(playlist.items(), start=1):
-        print(f"{idx}. {artist} - {song}")
+            for idx, (artist, song) in enumerate(playlist.items(), start=1):
+                print(f"{idx}. {artist} - {song}")
+        else:
+            print("Unable to save the playlist to playlist.txt")
+    else:
+        print(f"The passed {url = } is not correct")
+    

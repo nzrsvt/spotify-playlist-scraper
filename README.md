@@ -11,9 +11,10 @@ To use this script, you'll need Python installed on your system. Follow these st
 ```bash
 python script.py <urlAddress>
 ```
-Replace **'<urlAddress>'** with the URL of the Spotify playlist you want to scrape.
+> [!NOTE]
+> Replace ```<urlAddress>``` with the URL of the Spotify playlist you want to scrape.
 
-##Requirements
+## Requirements
 The script requires the following Python modules, which are listed in the **'requirements.txt'** file:
 
 * BeautifulSoup4
@@ -31,8 +32,8 @@ After running the script with the specified Spotify playlist URL, a file named p
 ```
 Additionally, the script will display the extracted playlist on the console, listing each song with its corresponding artist.
 
-## Note
-Please make sure you have the necessary permissions to access the Spotify playlist URL. Additionally, ensure that the playlist is publicly accessible, as private playlists may not be scraped successfully.
+> [!WARNING]
+> Please make sure you have the necessary permissions to access the Spotify playlist URL. Additionally, ensure that the playlist is publicly accessible, as private playlists may not be scraped successfully.
 
 ---
 Feel free to contribute to this project or report any issues on GitHub.
