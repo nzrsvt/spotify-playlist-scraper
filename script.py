@@ -39,7 +39,10 @@ def get_spotify_playlist(url):
 
                 artist = artist_info.split(" | Spotify")[0]
 
-                songs_dict[artist] = song_name
+                if artist not in songs_dict:
+                    songs_dict[artist] = [song_name]
+                else:
+                    songs_dict[artist].append(song_name)
 
             return(songs_dict)
         else:
@@ -62,17 +65,19 @@ if __name__ == "__main__":
 
         if playlist:
             if playlist == -1:
-                print("Couldn't recognize a playlist on a web page at the passed url")
+                print("Couldn't recognize a playlist on a web page at the passed url.")
             else:
                 with open("playlist.txt", "w", encoding="utf-8") as file:
-                    for artist, song in playlist.items():
-                        file.write(f"{artist} - {song}\n")
-                print("Playlist saved to playlist.txt")
+                    for artist, songs in playlist.items():
+                        for song in songs:
+                            file.write(f"{artist} - {song}\n")
+                print("Playlist saved to playlist.txt.")
 
-                for idx, (artist, song) in enumerate(playlist.items(), start=1):
-                    print(f"{idx}. {artist} - {song}")
+                for artist, songs in playlist.items():
+                    for song in songs:
+                        print(f"{artist} - {song}")
         else:
-            print("Unable to save the playlist to playlist.txt")
+            print("Unable to save the playlist to playlist.txt:")
     else:
-        print(f"The passed {url = } is not correct")
+        print(f"The passed {url = } is not correct.")
     
