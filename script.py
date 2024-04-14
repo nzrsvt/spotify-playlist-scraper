@@ -13,34 +13,37 @@ def get_spotify_playlist(url):
 
         song_meta_tags = soup.find_all('meta', attrs={'name': 'music:song'})
 
-        for tag in song_meta_tags:
-            song_links.append(tag['content'])
+        if song_meta_tags:
+            for tag in song_meta_tags:
+                song_links.append(tag['content'])
 
-        for link in song_links:
-            response_song = requests.get(link)
-            if response_song.status_code == 200:
-                soup_song = BeautifulSoup(response_song.text, 'html.parser')
-                title_tag = soup_song.find('title')
-                if title_tag:
-                    song_titles.append(title_tag.text.strip())
-            else:
-                print("Failed to retrieve the playlist.")
-                return {}
+            for link in song_links:
+                response_song = requests.get(link)
+                if response_song.status_code == 200:
+                    soup_song = BeautifulSoup(response_song.text, 'html.parser')
+                    title_tag = soup_song.find('title')
+                    if title_tag:
+                        song_titles.append(title_tag.text.strip())
+                else:
+                    print("Failed to retrieve the playlist.")
+                    return {}
 
-        songs_dict = {}
+            songs_dict = {}
 
-        for song_info in song_titles:
+            for song_info in song_titles:
 
-            parts = song_info.split(" - song and lyrics by ")
+                parts = song_info.split(" - song and lyrics by ")
 
-            song_name = parts[0]
-            artist_info = parts[1]
+                song_name = parts[0]
+                artist_info = parts[1]
 
-            artist = artist_info.split(" | Spotify")[0]
+                artist = artist_info.split(" | Spotify")[0]
 
-            songs_dict[artist] = song_name
+                songs_dict[artist] = song_name
 
-        return(songs_dict)
+            return(songs_dict)
+        else:
+            return -1
 
     else:
         print("Failed to retrieve the playlist.")
@@ -58,13 +61,16 @@ if __name__ == "__main__":
         playlist = get_spotify_playlist(url)
 
         if playlist:
-            with open("playlist.txt", "w", encoding="utf-8") as file:
-                for artist, song in playlist.items():
-                    file.write(f"{artist} - {song}\n")
-            print("Playlist saved to playlist.txt")
+            if playlist == -1:
+                print("Couldn't recognize a playlist on a web page at the passed url")
+            else:
+                with open("playlist.txt", "w", encoding="utf-8") as file:
+                    for artist, song in playlist.items():
+                        file.write(f"{artist} - {song}\n")
+                print("Playlist saved to playlist.txt")
 
-            for idx, (artist, song) in enumerate(playlist.items(), start=1):
-                print(f"{idx}. {artist} - {song}")
+                for idx, (artist, song) in enumerate(playlist.items(), start=1):
+                    print(f"{idx}. {artist} - {song}")
         else:
             print("Unable to save the playlist to playlist.txt")
     else:
